@@ -1,4 +1,4 @@
-import { MongoClient, ObjectId } from "mongodb";
+import { MongoClient, ObjectId, Sort } from "mongodb";
 
 //cached client for single connection
 let dbClient: MongoClient | null = null;
@@ -14,13 +14,13 @@ export async function getMongoClient() {
 
 export async function getAllDocuments(
   collection: string,
-  filter: [],
-  sortBy: string
+  filter: {},
+  sortBy: Sort | [string, 1 | -1][]
 ) {
   try {
     const client = await getMongoClient();
-    const db = client.db();
-    const documents = db
+    const db = client.db("reviewDepoDB");
+    const documents = await db
       .collection(collection)
       .find(filter)
       .sort(sortBy)
@@ -43,5 +43,18 @@ export async function getDocumentById(collection: string, id: string) {
     return { success: true, data: documents };
   } catch (error) {
     return { success: false, data: [], message: error };
+  }
+}
+export async function insertDocument(collection: string, data: {}) {
+  try {
+    const client = await getMongoClient();
+    const db = client.db("reviewDepoDB");
+    const result = await db.collection(collection).insertOne(data);
+    return {
+      success: result.acknowledged,
+      data: result.insertedId,
+    };
+  } catch (error) {
+    return { success: false, message: error };
   }
 }
