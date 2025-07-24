@@ -1,12 +1,15 @@
 "use client";
 import ArticleForm from "@/components/ArticleForm";
-import React, { useActionState, useState } from "react";
-import { ArticleType } from "../types";
+import React, { useActionState, useEffect, useState } from "react";
+import { ArticleType } from "../../types";
+import { useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
-type NewArticle = Omit<ArticleType, "_id" | "published">;
-
-export default function CreateArticle() {
-  const initialData: NewArticle = {
+export default function EditArticle() {
+  const params = useParams();
+  const router = useRouter();
+  const articleId = params.id;
+  const initialData: Omit<ArticleType, "_id" | "published"> = {
     title: "",
     body: "",
     author: "",
@@ -14,9 +17,16 @@ export default function CreateArticle() {
     amazon_link: "",
   };
   const [articleData, setArticleData] = useState(initialData);
-  const submitArticle = async (prevState: NewArticle, formData: FormData) => {
+  const getArticleData = async () => {
+    const response = await fetch(`/api/article/${articleId}`);
+    const responseJson = await response.json();
+    setArticleData(responseJson.data[0]);
+  };
+
+  const submitArticle = async (prevState: ArticleType, formData: FormData) => {
     const tagsList = (formData.get("tags")?.toString() || "").split(",");
     const articleData = {
+      id: articleId,
       title: formData.get("title"),
       body: formData.get("body"),
       author: formData.get("author"),
@@ -24,11 +34,13 @@ export default function CreateArticle() {
       amazon_link: formData.get("amazon_link"),
       published: true,
     };
-    const response = await fetch("/api/article/create", {
+    const response = await fetch(`/api/article/${articleId}`, {
       method: "POST",
       body: JSON.stringify(articleData),
     });
-
+    if (response.ok) {
+      router.push(`/article/${articleId}`);
+    }
     //setting values to formState
     return articleData;
   };
@@ -47,12 +59,19 @@ export default function CreateArticle() {
       };
     });
   };
+  useEffect(() => {
+    if (articleId) {
+      getArticleData();
+    }
+  }, [articleId]);
   return (
-    <div className="flex items-center justify-center w-full">
+    <div>
       <ArticleForm
+        isEdit={true}
         formAction={formAction}
         isPending={isPending}
-        isEdit={false}
+        articleData={articleData}
+        handleChange={handleChange}
       />
     </div>
   );

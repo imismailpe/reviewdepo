@@ -1,14 +1,14 @@
 export type ArticleType = {
-  _id: number;
-  title: string;
-  body: string;
+  _id?: number;
+  title: FormDataEntryValue | null;
+  body: FormDataEntryValue | null;
+  author: FormDataEntryValue | null;
   tags: string[];
-  author: string;
-  amazon_link: string;
-  published: boolean;
+  amazon_link: FormDataEntryValue | null;
+  published?: boolean;
 };
 
 export type ResponseType = {
   data: any[];
-  status: number;
+  status: boolean;
 };

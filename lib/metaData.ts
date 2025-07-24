@@ -1,3 +1,4 @@
+import { ResponseType } from "@/app/article/types";
 import { cache } from "react";
 
 export const getArticleData = cache(async (id: string) => {

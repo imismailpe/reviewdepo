@@ -27,6 +27,7 @@ export async function getAllDocuments(
       .toArray();
     return { success: true, data: documents };
   } catch (error) {
+    console.log("inside getAllDocuments", error);
     return { success: false, data: [], message: error };
   }
 }
@@ -55,6 +56,30 @@ export async function insertDocument(collection: string, data: {}) {
       data: result.insertedId,
     };
   } catch (error) {
+    return { success: false, message: error };
+  }
+}
+
+export async function updateDocument(collection: string, id: string, data: {}) {
+  try {
+    const client = await getMongoClient();
+    const db = client.db("reviewDepoDB");
+    const docId = new ObjectId(id);
+    const result = await db.collection(collection).updateOne(
+      {
+        _id: docId,
+      },
+      {
+        $set: data,
+      }
+    );
+    console.log("result ", docId, result);
+    return {
+      success: result.acknowledged,
+      data: result.modifiedCount,
+    };
+  } catch (error) {
+    console.log(error);
     return { success: false, message: error };
   }
 }

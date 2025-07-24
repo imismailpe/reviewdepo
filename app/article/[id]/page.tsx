@@ -1,7 +1,7 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
 import { getArticleData } from "@/lib/metaData";
 import { notFound } from "next/navigation";
+import ArticleCard from "@/components/ArticleCard";
 
 export async function generateMetadata({
   params,
@@ -33,17 +33,5 @@ export default async function Article({
     notFound();
   }
   const article = data.data[0];
-  return (
-    <div className="flex flex-col items-start p-4 border">
-      <div>{article.title}</div>
-      <div>{article.author}</div>
-      <div>{article.body}</div>
-      <div>{article.tags.join(", ")}</div>
-      <Button>
-        <a href={article.amazon_link} target="_blank">
-          Check on Amazon
-        </a>
-      </Button>
-    </div>
-  );
+  return <ArticleCard fullPage={true} article={article} />;
 }
