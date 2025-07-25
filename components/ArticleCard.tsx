@@ -79,7 +79,9 @@ export default function ArticleCard({
         </Link>
       )}
       <CardContent
-        className={fullPage ? "whitespace-pre-line" : "line-clamp-6"}
+        className={
+          fullPage ? "whitespace-pre-line" : "line-clamp-6 break-words"
+        }
       >
         {article.body as string}
       </CardContent>

@@ -20,11 +20,11 @@ export default function Home() {
 
   return (
     <div className="flex items-center justify-items-center">
-      <div className="flex gap-4 justify-center p-4 rounded m-4 flex-wrap">
+      <div className="flex gap-4 justify-center p-4 rounded m-4 flex-wrap items-stretch">
         {query.isLoading ? (
-          <div className="flex items-center justify-center">
+          <center>
             <Loader />
-          </div>
+          </center>
         ) : (
           query.data.data.map((art: ArticleType) => (
             <div key={art._id} className="w-[280px]">

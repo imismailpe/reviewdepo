@@ -2,10 +2,12 @@
 import ArticleForm from "@/components/ArticleForm";
 import React, { useActionState, useState } from "react";
 import { ArticleType } from "../types";
+import { useRouter } from "next/navigation";
 
 type NewArticle = Omit<ArticleType, "_id" | "published">;
 
 export default function CreateArticle() {
+  const router = useRouter();
   const initialData: NewArticle = {
     title: "",
     body: "",
@@ -28,7 +30,8 @@ export default function CreateArticle() {
       method: "POST",
       body: JSON.stringify(articleData),
     });
-
+    const responseJson = await response.json();
+    router.push(`/article/${responseJson.data}`);
     //setting values to formState
     return articleData;
   };
@@ -53,6 +56,7 @@ export default function CreateArticle() {
         formAction={formAction}
         isPending={isPending}
         isEdit={false}
+        handleChange={handleChange}
       />
     </div>
   );

@@ -4,6 +4,7 @@ import React, { useActionState, useEffect, useState } from "react";
 import { ArticleType } from "../../types";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
+import { Loader } from "lucide-react";
 
 export default function EditArticle() {
   const params = useParams();
@@ -17,10 +18,13 @@ export default function EditArticle() {
     amazon_link: "",
   };
   const [articleData, setArticleData] = useState(initialData);
+  const [fetchingArticle, setFetchinArticle] = useState(true);
   const getArticleData = async () => {
+    setFetchinArticle(true);
     const response = await fetch(`/api/article/${articleId}`);
     const responseJson = await response.json();
     setArticleData(responseJson.data[0]);
+    setFetchinArticle(false);
   };
 
   const submitArticle = async (prevState: ArticleType, formData: FormData) => {
@@ -66,13 +70,19 @@ export default function EditArticle() {
   }, [articleId]);
   return (
     <div>
-      <ArticleForm
-        isEdit={true}
-        formAction={formAction}
-        isPending={isPending}
-        articleData={articleData}
-        handleChange={handleChange}
-      />
+      {fetchingArticle ? (
+        <center>
+          <Loader />
+        </center>
+      ) : (
+        <ArticleForm
+          isEdit={true}
+          formAction={formAction}
+          isPending={isPending}
+          articleData={articleData}
+          handleChange={handleChange}
+        />
+      )}
     </div>
   );
 }
