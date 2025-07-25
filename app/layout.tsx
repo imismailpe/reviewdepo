@@ -33,8 +33,17 @@ export default function RootLayout({
             <a href="/">Home</a>
             <a href="/article/create">Create</a>
           </header>
+          <section className="p-4">
+            🛍️ Never Miss a Deal Again! Be the first to know about exclusive
+            Amazon India offers, price drops, and lightning deals
+          </section>
           <main className="p-4">{children}</main>
-          <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center"></footer>
+          <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
+            <section className="p-4">
+              These posts contain affiliate links. As an Amazon Associate, I
+              earn from qualifying purchases at no extra cost to you.
+            </section>
+          </footer>
         </AllProviders>
       </body>
     </html>

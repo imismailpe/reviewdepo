@@ -1,4 +1,8 @@
-import { getDocumentById, updateDocument } from "../../functions";
+import {
+  deleteDocument,
+  getDocumentById,
+  updateDocument,
+} from "../../functions";
 
 export async function GET(
   req: Request,
@@ -34,6 +38,25 @@ export async function POST(req: Request) {
     });
   } catch (error) {
     console.log("inside /api/article/[id] post", error);
+    return new Response(
+      JSON.stringify({
+        success: false,
+        data: [],
+      }),
+      {
+        status: 500,
+      }
+    );
+  }
+}
+export async function DELETE(req: Request) {
+  const body = await req.json();
+  const { id } = body;
+  try {
+    const response = await deleteDocument("articles", id);
+    return new Response(JSON.stringify(response), { status: 200 });
+  } catch (error) {
+    console.log(error);
     return new Response(
       JSON.stringify({
         success: false,

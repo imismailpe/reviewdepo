@@ -73,7 +73,7 @@ export async function updateDocument(collection: string, id: string, data: {}) {
         $set: data,
       }
     );
-    console.log("result ", docId, result);
+
     return {
       success: result.acknowledged,
       data: result.modifiedCount,
@@ -81,5 +81,20 @@ export async function updateDocument(collection: string, id: string, data: {}) {
   } catch (error) {
     console.log(error);
     return { success: false, message: error };
+  }
+}
+export async function deleteDocument(collection: string, id: string) {
+  try {
+    const client = await getMongoClient();
+    const db = client.db("reviewDepoDB");
+    const docId = new ObjectId(id);
+    const result = await db.collection(collection).deleteOne({ _id: docId });
+    return {
+      success: result.acknowledged,
+      data: result.deletedCount,
+    };
+  } catch (error) {
+    console.log(error);
+    return { success: false, data: error };
   }
 }
