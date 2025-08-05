@@ -4,7 +4,7 @@ import React, { useActionState, useState } from "react";
 import { ArticleType } from "../types";
 import { useRouter } from "next/navigation";
 
-type NewArticle = Omit<ArticleType, "_id" | "published">;
+type NewArticle = Omit<ArticleType, "id" | "published">;
 
 export default function CreateArticle() {
   const router = useRouter();

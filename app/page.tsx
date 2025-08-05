@@ -27,7 +27,7 @@ export default function Home() {
           </center>
         ) : (
           query.data.data.map((art: ArticleType) => (
-            <div key={art._id} className="w-[280px]">
+            <div key={art.id} className="w-[280px]">
               <ArticleCard fullPage={false} article={art} />
             </div>
           ))

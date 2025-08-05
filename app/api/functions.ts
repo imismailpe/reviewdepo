@@ -1,4 +1,5 @@
-import { MongoClient, ObjectId, Sort } from "mongodb";
+import { MongoClient, ObjectId, Sort, WithId } from "mongodb";
+import { ArticleType } from "../article/types";
 
 //cached client for single connection
 let dbClient: MongoClient | null = null;
@@ -21,11 +22,13 @@ export async function getAllDocuments(
     const client = await getMongoClient();
     const db = client.db("reviewDepoDB");
     const documents = await db
-      .collection(collection)
+      .collection<ArticleType>(collection)
       .find(filter)
       .sort(sortBy)
       .toArray();
-    return { success: true, data: documents };
+    const documentsWithId = withId(documents);
+
+    return { success: true, data: documentsWithId };
   } catch (error) {
     console.log("inside getAllDocuments", error);
     return { success: false, data: [], message: error };
@@ -37,11 +40,12 @@ export async function getDocumentById(collection: string, id: string) {
     const db = client.db("reviewDepoDB");
     const docId = new ObjectId(id);
     const documents = await db
-      .collection(collection)
+      .collection<ArticleType>(collection)
       .find({ _id: docId })
       .toArray();
     // client.close();
-    return { success: true, data: documents };
+    const documentsWithId = withId(documents);
+    return { success: true, data: documentsWithId };
   } catch (error) {
     return { success: false, data: [], message: error };
   }
@@ -97,4 +101,16 @@ export async function deleteDocument(collection: string, id: string) {
     console.log(error);
     return { success: false, data: error };
   }
+}
+
+function withId(data: Record<string, any>[]) {
+  return data.map((row) => ({
+    id: row._id.toString(),
+    title: row.title,
+    body: row.body,
+    author: row.author,
+    tags: row.tags,
+    amazon_link: row.amazon_link,
+    published: row.published,
+  }));
 }

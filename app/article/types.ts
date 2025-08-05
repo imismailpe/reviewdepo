@@ -1,5 +1,7 @@
+import { ObjectId } from "mongodb";
+
 export type ArticleType = {
-  _id?: number;
+  id?: string;
   title: FormDataEntryValue | null;
   body: FormDataEntryValue | null;
   author: FormDataEntryValue | null;

@@ -27,9 +27,9 @@ export default function ArticleCard({
   const [deleting, setDeleting] = useState(false);
   const deleteArticle = async () => {
     setDeleting(true);
-    const result = await fetch(`/api/article/${article._id}`, {
+    const result = await fetch(`/api/article/${article.id}`, {
       method: "DELETE",
-      body: JSON.stringify({ id: article._id }),
+      body: JSON.stringify({ id: article.id }),
     });
     if (result.ok) {
       const jsonr = result.json();
@@ -49,7 +49,7 @@ export default function ArticleCard({
             {article.title as string}
           </CardTitle>
           <CardAction className="flex gap-4 items-center">
-            <a href={`/article/${article._id}/edit`}>Edit</a>
+            <a href={`/article/${article.id}/edit`}>Edit</a>
             <Button
               variant={"destructive"}
               disabled={deleting}
@@ -63,7 +63,7 @@ export default function ArticleCard({
           </CardDescription>
         </CardHeader>
       ) : (
-        <Link href={`/article/${article._id}`}>
+        <Link href={`/article/${article.id}`}>
           <CardHeader className="bg-primary p-4 rounded">
             <CardTitle
               className={

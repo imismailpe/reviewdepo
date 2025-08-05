@@ -10,7 +10,7 @@ export default function EditArticle() {
   const params = useParams();
   const router = useRouter();
   const articleId = params.id;
-  const initialData: Omit<ArticleType, "_id" | "published"> = {
+  const initialData: Omit<ArticleType, "id" | "published"> = {
     title: "",
     body: "",
     author: "",
