@@ -65,11 +65,7 @@ export default function ArticleForm({
         value={articleData?.amazon_link as string}
         onChange={handleChange}
       ></Input>
-      <Button
-        disabled={isPending}
-        formAction={formAction}
-        className="w-fit dark:text-white"
-      >
+      <Button disabled={isPending} className="w-fit dark:text-white">
         {isPending ? <Loader className="h-4 w-4 animate-spin mr-2" /> : null}
         {isEdit ? "Save" : "Create"}
       </Button>

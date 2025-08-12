@@ -6,6 +6,8 @@ import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { Loader } from "lucide-react";
 
+type formStatusType = { success: boolean; error: null | string };
+
 export default function EditArticle() {
   const params = useParams();
   const router = useRouter();
@@ -17,6 +19,10 @@ export default function EditArticle() {
     tags: [],
     amazon_link: "",
   };
+  const initialFormStatus: formStatusType = {
+    success: false,
+    error: null,
+  };
   const [articleData, setArticleData] = useState(initialData);
   const [fetchingArticle, setFetchinArticle] = useState(true);
   const getArticleData = async () => {
@@ -27,7 +33,10 @@ export default function EditArticle() {
     setFetchinArticle(false);
   };
 
-  const submitArticle = async (prevState: ArticleType, formData: FormData) => {
+  const submitArticle = async (
+    prevState: formStatusType,
+    formData: FormData
+  ): Promise<formStatusType> => {
     const tagsList = (formData.get("tags")?.toString() || "").split(",");
     const articleData = {
       id: articleId,
@@ -44,13 +53,22 @@ export default function EditArticle() {
     });
     if (response.ok) {
       router.push(`/article/${articleId}`);
+      //setting values to formStatus
+      return {
+        success: true,
+        error: null,
+      };
+    } else {
+      //setting values to formStatus
+      return {
+        success: false,
+        error: response.statusText,
+      };
     }
-    //setting values to formState
-    return articleData;
   };
-  const [formState, formAction, isPending] = useActionState(
+  const [formStatus, formAction, isPending] = useActionState(
     submitArticle,
-    articleData
+    initialFormStatus
   );
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
